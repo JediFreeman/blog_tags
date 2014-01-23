@@ -12,7 +12,7 @@ module BlogTags
     # get the page's siblings, exclude any that have nil 
     # for the sorting attribute, exclude virtual pages,
     # and sort by the chosen attribute
-    siblings = current.self_and_siblings.delete_if { |s| s.send(by).nil? || s.virtual? }.sort_by { |page| page.attributes[by] }
+    siblings = current.self_and_siblings.delete_if { |s| s.send(by).nil? || s.virtual? || !s.published? }.sort_by { |page| page.attributes[by] }
     index = siblings.index(current)
     next_page = siblings[index + 1]
   
@@ -30,7 +30,7 @@ module BlogTags
       raise TagError.new("`by' attribute of `previous' tag must be set to a valid page attribute name")
     end
         
-    siblings = current.self_and_siblings.delete_if { |s| s.send(by).nil? || s.virtual? }.sort_by { |page| page.attributes[by] }
+    siblings = current.self_and_siblings.delete_if { |s| s.send(by).nil? || s.virtual? || !s.published? }.sort_by { |page| page.attributes[by] }
     index = siblings.index(current)
 
     # we don't want to wrap around to the last article  
